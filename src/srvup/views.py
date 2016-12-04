@@ -18,6 +18,7 @@ def home(request):
 		"title": title,
 		"videos": videos,
 		"embeds": embeds,
+		"number": videos.count(),
 	}
 	return render(request, "videos.html", context)
 

@@ -4,7 +4,13 @@
 
 {% block content %}
 	<h1 class="text-center">{{ title }}</h1>
+	<hr/>
 	<div class="col-sm-6 col-sm-offset-3">
+	{% if user.is_authenticated %}
+	<h3>Hello {{ user }}</h3>
+	<p>We have {{ number }} videos</p>
+	<hr/>
+	{% endif %}
 		{% for video in videos %}
 		<h3 class="text-center"><a href="{{ video.get_absolute_url }}">{{ video.title }}</a></h3>
 		{{ video.embed_code|safe }}
