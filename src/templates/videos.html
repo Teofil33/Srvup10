@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block title %} {{ block.super }}  | {{ title }}  {% endblock title %}
+
+{% block content %}
+	<h1 class="text-center">{{ title }}</h1>
+	<div class="col-sm-6 col-sm-offset-3">
+		{% for video in videos %}
+		<h3>{{ video.title }}</h3>
+		{{ video.embed_code|safe }}
+		<hr/>
+		{% endfor %}
+	</div>
+{% endblock %}
