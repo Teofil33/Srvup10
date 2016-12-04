@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %} {{ block.super }} | Loged Out {% endblock title %}
+
+{% block content %}
+	<div class="col-sm-6 col-sm-offset-3 text center">
+		<h3>Logged Out</h3>
+		<p>You have succsessfully Logged Out you can <a href="{% url 'login' %}">Login Again</a></p>
+		<a class="btn btn-primary" href="{% url 'home' %}">Videos</a>
+	</div>
+{% endblock content %}
