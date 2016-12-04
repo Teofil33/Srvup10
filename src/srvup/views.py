@@ -40,4 +40,16 @@ def auth_login(request):
 
 def auth_logout(request):
 	logout(request)
-	return render(request, "logout.html", {})		
+	return render(request, "logout.html", {})
+
+def about(request):
+	return render(request, "about.html", {})	
+
+def contact(request):
+	return render(request, "contact.html", {})
+
+
+
+
+
+

@@ -25,6 +25,8 @@ urlpatterns = [
     url(r'^login/$', views.auth_login, name="login"),
     url(r'^logout/$', views.auth_logout, name="logout"),
     url(r'^$', views.home, name="home"),
+    url(r'^about/$', views.about, name="about"),
+    url(r'^contact/$', views.contact, name="contact"),
     url(r'^videos/', include("videos.urls", namespace="videos")),
 ]
 
