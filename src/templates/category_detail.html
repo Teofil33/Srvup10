@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %} {{ block.super }} | {{ category.title }} {% endblock title %}
+
+{% block content %}
+	<div class="col-sm-6 col-sm-offset-3">
+		<h2 class="text-center">{{ category.title }}</h3>
+		<hr/>
+		{% for video in videos %}
+		<h4>{{ video.title }}</h4>
+		<hr/>
+		{{ video.embed_code|safe }}
+		<hr/>	
+		{% endfor %}
+	</div>	
+{% endblock content %}

@@ -3,7 +3,7 @@ from django.shortcuts import render, redirect
 from django.utils.safestring import mark_safe
 from django.contrib.auth.decorators import login_required
 
-from videos.models import Video
+from videos.models import Video, Category
 from .forms import LoginForm
 
 @login_required(login_url='/login/')
