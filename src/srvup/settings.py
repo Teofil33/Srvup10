@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'crispy_forms',
     'videos',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -132,6 +133,8 @@ LOGIN_URL = '/login/'
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
 FULL_DOMAIN_NAME = 'http://www.joincfe.com'
+
+AUTH_USER_MODEL = 'accounts.MyUser'
 
 
 

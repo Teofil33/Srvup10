@@ -2,18 +2,44 @@
 
 {% block title %} {{ block.super }}  | {{ title }}  {% endblock title %}
 
+<!-- <script>
+{% block jquery %}
+	function update_iframe_size(){
+		var parent_id = $("iframe").parent().attr("class");
+		if (parent_id == "main_video") {
+			var parent_class = $("iframe").parent().attr("class");
+			var parent_width = $("iframe").parent().width();
+			console.log(parent_class);
+			var width = $("iframe").css("width"); // $("iframe").width();
+			var height = $("iframe").css("height");
+			var ratio = parseInt(height)/parseInt(width);
+			var new_height = parseInt(parent_width) * ratio
+			$("iframe").css("width", parent_width);
+			$("iframe").css("height", new_height);
+		}
+	}
+	update_iframe_size()
+	$(window).bind("resize", function(){
+		// alert("reized");
+		update_iframe_size();
+	});
+{% endblock %}
+</script> -->
+
 {% block content %}
 	<h1 class="text-center">{{ title }}</h1>
 	<hr/>
 	<div class="col-sm-6 col-sm-offset-3">
 	{% if user.is_authenticated %}
-	<h3>Hello {{ user }}</h3>
+	<h3>Hello {% if user.first_name %} {{ user.first_name }} {% else %} {{ user.username }} {% endif %}</h3>
 	<p>We have {{ number }} videos</p>
 	<hr/>
 	{% endif %}
 		{% for video in videos %}
 		<h3 class="text-center"><a href="{{ video.get_absolute_url }}">{{ video.title }}</a></h3>
+		<div class="col-sm-12" id="main_video">
 		{{ video.embed_code|safe }}
+		</div>
 		<hr/>
 		{% endfor %}
 
