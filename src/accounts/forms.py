@@ -3,6 +3,42 @@ from django.contrib.auth.forms import ReadOnlyPasswordHashField
 
 from .models import MyUser
 
+class RegisterForm(forms.Form):
+        username = forms.CharField() # requried = True by default
+        email = forms.EmailField()
+        password1 = forms.CharField(label="Password", widget=forms.PasswordInput)
+        password2 = forms.CharField(label="Password confirmation", widget=forms.PasswordInput)
+
+        def clean_password2(self):
+            password1 = self.cleaned_data.get("password1")
+            if len(password1) <= 4:
+                raise forms.ValidationError("Password Too Short")
+            password2 = self.cleaned_data.get("password2")
+            if password1 and password2 and password1 != password2:
+                raise forms.ValidationError("Passwords Don't match")
+            return password2    
+
+        def clean_username(self):
+            username = self.cleaned_data.get("username")
+            try:
+                exists = MyUser.objects.get(username=username)
+                raise forms.ValidationError("Username Already Exists")
+            except MyUser.DoesNotExist:
+                return username
+            except:
+                raise forms.ValidationError("Error has occured, please try again or contact us") 
+
+        def clean_email(self):
+            email = self.cleaned_data.get("email")
+            try:
+                exists = MyUser.objects.get(email=email)
+                forms.ValidationError("Email already registered")
+            except MyUser.DoesNotExist:
+                return email
+            except:
+                raise forms.ValidationError("There was an error, please try again or contact us.")                        
+
+
 class UserCreationForm(forms.ModelForm):
     """A form for creating new users. Includes all the required
     fields, plus a repeated password."""

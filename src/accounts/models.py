@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 from django.db import models
+from django.db.models.signals import post_save
 from django.contrib.auth.forms import ReadOnlyPasswordHashField
 from django.contrib.auth.models import (
 		BaseUserManager, AbstractBaseUser
@@ -162,6 +163,14 @@ class UserProfile(models.Model):
 	def __unicode__(self):
 		return self.user.username
 
+
+def new_user_receiver(sender, instance, created, *args, **kwargs):
+	if created:
+		new_profile, is_created = UserProfile.objects.get_or_create(user=instance)
+		print new_profile, is_created
+
+
+post_save.connect(new_user_receiver, sender=MyUser)
 
 
 
