@@ -131,6 +131,8 @@ LOGIN_URL = '/login/'
 
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
 
+FULL_DOMAIN_NAME = 'http://www.joincfe.com'
+
 
 
 

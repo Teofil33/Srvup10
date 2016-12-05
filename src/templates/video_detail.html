@@ -2,12 +2,53 @@
 
 {% block title %} {{ block.super }} | {{ video.title }} {% endblock title %}
 
+<script>
+{% block jquery %}
+	function update_iframe_size(){
+		var parent_id = $("iframe").parent().attr("id");
+		if (parent_id == "main_video") {
+			var parent_class = $("iframe").parent().attr("class");
+			var parent_width = $("iframe").parent().width();
+			console.log(parent_class);
+			var width = $("iframe").css("width"); // $("iframe").width();
+			var height = $("iframe").css("height");
+			var ratio = parseInt(height)/parseInt(width);
+			var new_height = parseInt(parent_width) * ratio
+			$("iframe").css("width", parent_width);
+			$("iframe").css("height", new_height);
+		}
+	}
+	update_iframe_size()
+	$(window).bind("resize", function(){
+		// alert("reized");
+		update_iframe_size();
+	});
+{% endblock %}
+</script>
+
 {% block content %}
 	<div class="col-sm-8 col-sm-offset-2 text-center">
 		<h3>{{ video.title }}</h3>
 		<hr/>
+		<div class='col-sm-12' id='main_video'>
 		{{ video.embed_code|safe }}
+		</div>
+		
+		<hr/>
+
+		<a target="blank" href="https://twitter.com/home?status={{ video.get_share_message|safe }}"><i class="fa fa-twitter-square fa-3x" aria-hidden="true"></i>
+		</a>
+		<a target="blank" href="https://www.facebook.com/sharer/sharer.php?u={{ video.get_share_link }}"><i class="fa fa-facebook-square fa-3x" aria-hidden="true"></i>
+		</a>
+		<a target="blank" href='https://plus.google.com/share?url={{ video.get_share_link }}'><i class="fa fa-google-plus-square fa-3x" aria-hidden="true"></i>
+		</a>
+		<a target="blank" href="https://www.linkedin.com/shareArticle?mini=true&url={{ video.get_share_link }}&title={{ video.get_share_message|safe }}&summary={{ video.get_share_message|safe }}&source={{ video.get_share_link }}">
+		<i class="fa fa-linkedin-square fa-3x" aria-hidden="true"></i>	
+		</a>
+		<a target="blank" href="http://www.reddit.com/submit?url={{ video.get_share_link }}&title={{ video.get_share_message|safe }}"><i class="fa fa-reddit-square fa-3x" aria-hidden="true"></i></a>
+
 		<hr/>
 		<a href="{% url 'home' %}">Home</a>
+		<a href="{{ category.get_absolute_url }}">{{ category.title }}</a>
 	</div>
 {% endblock content %}

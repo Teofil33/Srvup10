@@ -7,7 +7,7 @@
 		<h2 class="text-center">{{ category.title }}</h3>
 		<hr/>
 		{% for video in videos %}
-		<h4>{{ video.title }}</h4>
+		<h4><a href="{{ video.get_absolute_url }}">{{ video.title }}</a></h4>
 		<hr/>
 		{{ video.embed_code|safe }}
 		<hr/>	

@@ -5,10 +5,12 @@ from django.contrib.auth.decorators import login_required
 
 from .models import Video, Category
 
-def video_detail(request, id):
-	video = Video.objects.get(id=id)
+def video_detail(request, cat_slug, vid_slug):
+	video = Video.objects.get(slug=vid_slug)
+	category = video.category
 	context = {
 		"video": video,
+		"category": category,
 	}
 	return render(request, "video_detail.html", context)
 
@@ -21,8 +23,8 @@ def category_list(request):
 	return render(request, "categories.html", context)
 
 @login_required
-def category_detail(request, slug=None):
-	category = Category.objects.get(slug=slug)
+def category_detail(request, cat_slug=None):
+	category = Category.objects.get(slug=cat_slug)
 	videos = category.video_set.all()
 	context = {
 		"category": category,
