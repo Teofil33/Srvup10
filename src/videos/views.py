@@ -1,16 +1,37 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 
 from .models import Video, Category
+from comments.models import Comment
+from comments.forms import CommentForm
 
 def video_detail(request, cat_slug, vid_slug):
 	video = Video.objects.get(slug=vid_slug)
 	category = video.category
+	comments = Comment.objects.filter(video=video.id)
+	form = CommentForm(request.POST or None)
+	if form.is_valid():
+		parent_id = request.POST.get("parent_id")
+		parent_comment = None
+		if parent_id:
+			parent_comment = Comment.objects.get(id=parent_id)
+		instance = form.save(commit=False)
+		instance.user = request.user
+		if parent_comment:
+			instance.parent = parent_comment
+		instance.video = video
+		instance.path = request.get_full_path()
+		instance.content = form.cleaned_data.get('content')
+		instance.save()
+		return redirect(video.get_absolute_url())
+
 	context = {
 		"video": video,
 		"category": category,
+		"comments": comments,
+		"form": form,
 	}
 	return render(request, "video_detail.html", context)
 

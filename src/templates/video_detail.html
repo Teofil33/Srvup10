@@ -1,9 +1,30 @@
 {% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block title %} {{ block.super }} | {{ video.title }} {% endblock title %}
 
+<style type="text/css">
+	{% block style %}
+	.reply_comment, .comment_display {
+		display: none;
+	}
+	{% endblock %}
+</style>
+	
 <script>
 {% block jquery %}
+	$('.reply_button').click(function(e){
+		e.preventDefault();
+		$(this).next(".reply_comment").fadeToggle();
+		//$('.reply_comment').fadeToggle();
+	})
+
+	$('.comment_button').click(function(e){
+		e.preventDefault();
+		$(this).next(".comment_display").fadeToggle();
+		//$('.reply_comment').fadeToggle();
+	})
+
 	function update_iframe_size(){
 		var parent_id = $("iframe").parent().attr("id");
 		if (parent_id == "main_video") {
@@ -28,7 +49,10 @@
 
 {% block content %}
 	<div class="col-sm-8 col-sm-offset-2 text-center">
-		<h3>{{ video.title }}</h3>
+		<h3 class="text-center">{{ video.title }}</h3>
+		<hr/>
+		<a href="{% url 'home' %}">Home</a>
+		<a href="{{ category.get_absolute_url }}">{{ category.title }}</a>
 		<hr/>
 		<div class='col-sm-12' id='main_video'>
 		{{ video.embed_code|safe }}
@@ -46,9 +70,50 @@
 		<i class="fa fa-linkedin-square fa-3x" aria-hidden="true"></i>	
 		</a>
 		<a target="blank" href="http://www.reddit.com/submit?url={{ video.get_share_link }}&title={{ video.get_share_message|safe }}"><i class="fa fa-reddit-square fa-3x" aria-hidden="true"></i></a>
-
 		<hr/>
-		<a href="{% url 'home' %}">Home</a>
-		<a href="{{ category.get_absolute_url }}">{{ category.title }}</a>
 	</div>
-{% endblock content %}
+	<div class="col-sm-6 col-sm-offset-3">
+		<h3 class="text-center">Comments</h3>
+		<hr/>
+		<button class="btn btn-default btn-block comment_button">Comment</button>
+		<div class="comment_display">
+		<hr/>
+			<form method="POST" action=".">
+				{% csrf_token %}
+				{{ form|crispy }}
+				<input class="btn btn-primary" type="submit" value="Comment">
+			</form>
+			<hr/>
+		</div>		
+		{% for comment in comments %}
+		{% if comment.is_parent %}
+		<hr/>	
+		<blockquote>
+		  <p>{{ comment.content }}</p>
+		  <footer>Via: <cite title="Source Title">{{ comment.user }} | {{ comment.timestamp|timesince }} ago</cite></footer>
+		  <hr/>
+		  <button class="btn btn-default btn-xs reply_button">Reply</button>
+		  <div class="reply_comment">
+		  	  <hr/>	
+			  <form method="POST" action=".">
+			  	{% csrf_token %}
+			  	<input type="hidden" name="parent_id" value="{{ comment.id }}">
+			  	{{ form|crispy }}
+			  	<input class="btn btn-default btn-sm" type="submit" value="Reply">
+			  </form>
+		  </div>
+		  <hr/>
+		  {% if comment.get_children %}
+		  	{% for child in comment.get_children %}
+		  	<blockquote>
+			  <p>{{ child.content }}</p>
+			  <footer>Via: <cite title="Source Title">{{ child.user }} | {{ child.timestamp|timesince }} ago</cite></footer>
+			</blockquote>  
+		  	{% endfor %}
+		  {% endif %}
+		</blockquote>
+		{% endif %}
+		{% endfor %}
+	</div>	
+		
+	{% endblock content %}

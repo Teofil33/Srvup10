@@ -19,12 +19,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from . import views
+from accounts.views import auth_register, auth_login, auth_logout
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^register/$', views.auth_register, name="register"),
-    url(r'^login/$', views.auth_login, name="login"),
-    url(r'^logout/$', views.auth_logout, name="logout"),
+    url(r'^register/$', auth_register, name="register"),
+    url(r'^login/$', auth_login, name="login"),
+    url(r'^logout/$', auth_logout, name="logout"),
     url(r'^$', views.home, name="home"),
     url(r'^about/$', views.about, name="about"),
     url(r'^contact/$', views.contact, name="contact"),
