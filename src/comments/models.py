@@ -1,11 +1,38 @@
 from __future__ import unicode_literals
 
 from django.db import models
-
+from django.shortcuts import reverse
 from accounts.models import MyUser
 from videos.models import Video
 
 # Create your models here.
+
+# class CommentManager(models.Manager):
+# 	def all(self):
+# 		return super(CommentManager, self).filter(active=True).filter(parent=None) # .order_by("-timestamp")
+
+# 	def create_comment(self, user=None, content=None, parent=None, video=None):
+# 		if not path:
+# 			raise ValueError("Must include path when adding a comment")
+# 		if not user:
+# 			raise ValueError("Must specify user when adding a comment")
+
+# 		comment = self.model(
+# 				user = user,
+# 				path = path,
+# 				content = content
+# 			)
+
+# 		if video is not None:
+# 			comment.video = video
+
+# 		if parent is not None:
+# 			comment.parent = parent
+
+# 		comment.save(using=self._db)
+# 		return comment					
+
+			
 
 class Comment(models.Model):
 	user = models.ForeignKey(MyUser)
@@ -23,6 +50,9 @@ class Comment(models.Model):
 
 	def __unicode__(self):
 		return self.content
+
+	def get_absolute_url(self):
+		return reverse("videos:comment_thread", kwargs = {"cat_slug": self.video.category.slug, "vid_slug": self.video.slug, "id": self.id})	
 
 	@property
 	def get_comment(self):

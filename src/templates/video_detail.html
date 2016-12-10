@@ -90,7 +90,7 @@
 		<hr/>	
 		<blockquote>
 		  <p>{{ comment.content }}</p>
-		  <footer>Via: <cite title="Source Title">{{ comment.user }} | {{ comment.timestamp|timesince }} ago</cite></footer>
+		  <footer>Via: <cite title="Source Title">{{ comment.user }} | {{ comment.timestamp|timesince }} ago | <a href="{{ comment.get_absolute_url }}">View Thread</a></cite></footer>
 		  <hr/>
 		  <button class="btn btn-default btn-xs reply_button">Reply</button>
 		  <div class="reply_comment">

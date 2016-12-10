@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %} {{ video.title }} | Comment {% endblock %}
+
+<style type="text/css">
+	{% block style %}
+	.reply_comment, .comment_display {
+		display: none;
+	}
+	{% endblock %}
+</style>
+
+<script>
+{% block jquery %}
+	$('.reply_button').click(function(e){
+		e.preventDefault();
+		$(this).next(".reply_comment").fadeToggle();
+		//$('.reply_comment').fadeToggle();
+	})
+{% endblock %}
+</script>
+
+{% block content %}
+
+<div class="col-sm-6 col-sm-offset-3">	
+	{% if comment.is_parent %}
+	<hr/>	
+	<blockquote>
+	  <p>{{ comment.content }}</p>
+	  <footer>Via: <cite title="Source Title">{{ comment.user }} | {{ comment.timestamp|timesince }} ago </cite></footer>
+	  <hr/>
+	  <button class="btn btn-default btn-xs reply_button">Reply</button>
+	  <div class="reply_comment">
+	  	  <hr/>	
+		  <form method="POST" action=".">
+		  	{% csrf_token %}
+		  	<input type="hidden" name="parent_id" value="{{ comment.id }}">
+		  	{{ form|crispy }}
+		  	<input class="btn btn-default btn-sm" type="submit" value="Reply">
+		  </form>
+	  </div>
+	  <hr/>
+	  {% if comment.get_children %}
+	  	{% for child in comment.get_children %}
+	  	<blockquote>
+		  <p>{{ child.content }}</p>
+		  <footer>Via: <cite title="Source Title">{{ child.user }} | {{ child.timestamp|timesince }} ago</cite></footer>
+		</blockquote>  
+	  	{% endfor %}
+	  {% endif %}
+	</blockquote>
+	{% endif %}
+</div>
+
+{% endblock content %}
