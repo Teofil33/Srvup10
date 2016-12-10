@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
+from django.contrib import messages
 
 # Create your views here.
 
@@ -23,6 +24,7 @@ def comment_thread(request, id, cat_slug, vid_slug):
 		instance.path = request.get_full_path()
 		instance.content = comment_form.cleaned_data.get("content")
 		instance.save()
+		messages.success(request, "Thank you for your reply")
 		return redirect(comment.get_absolute_url())
 	context = {
 		"comment": comment,

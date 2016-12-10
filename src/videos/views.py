@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-
+from django.contrib import messages
 # Create your views here.
 
 from .models import Video, Category
@@ -25,6 +25,10 @@ def video_detail(request, cat_slug, vid_slug):
 		instance.path = request.get_full_path()
 		instance.content = form.cleaned_data.get('content')
 		instance.save()
+		if parent_comment:
+			messages.success(request, "Thank you for your Reply!")
+		else:
+			messages.success(request, "Thank you for your Comment!")	
 		return redirect(video.get_absolute_url())
 
 	context = {
