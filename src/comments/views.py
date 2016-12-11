@@ -4,6 +4,7 @@ from django.contrib import messages
 
 # Create your views here.
 
+from notifications.signals import notify
 from .models import Comment
 from videos.models import Video, Category
 from comments.forms import CommentForm
@@ -24,6 +25,7 @@ def comment_thread(request, id, cat_slug, vid_slug):
 		instance.path = request.get_full_path()
 		instance.content = comment_form.cleaned_data.get("content")
 		instance.save()
+		notify.send(request.user, recipient=parent_comment.user, action="responded to user")
 		messages.success(request, "Thank you for your reply")
 		return redirect(comment.get_absolute_url())
 	context = {

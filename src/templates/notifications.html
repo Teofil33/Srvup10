@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %} {{ block.super }} | Notifications {% endblock title %}
+
+{% block content %}
+	<div class="col-sm-8 col-sm-offset-2">
+	<h1 class="text-center">Notifications</h1>
+	<hr/>
+	<table class="table table-striped">
+		<tr>
+			<th>Notifications</th>
+			<th>Recipient</th>
+			<th>Time</th>
+		</tr>
+		{% for notification in notifications %}
+			<tr>
+				<td>{{ notification.action }}</td>
+				<td>{{ notification.recipient }}</td>
+				<td>{{ notification.timestamp }}</td>
+			</tr>
+		{% endfor %}
+	</table>
+	</div>
+	
+{% endblock content %}

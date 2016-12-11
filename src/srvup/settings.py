@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'videos',
     'accounts',
     'comments',
+    'notifications',
 ]
 
 MIDDLEWARE = [

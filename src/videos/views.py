@@ -1,8 +1,10 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+
 # Create your views here.
 
+from notifications.signals import notify
 from .models import Video, Category
 from comments.models import Comment
 from comments.forms import CommentForm
@@ -26,8 +28,10 @@ def video_detail(request, cat_slug, vid_slug):
 		instance.content = form.cleaned_data.get('content')
 		instance.save()
 		if parent_comment:
+			notify.send(request.user, recipient=parent_comment.user, action="Responded to user")
 			messages.success(request, "Thank you for your Reply!")
 		else:
+			notify.send(request.user, recipient=request.user, action="New comment added")
 			messages.success(request, "Thank you for your Comment!")	
 		return redirect(video.get_absolute_url())
 

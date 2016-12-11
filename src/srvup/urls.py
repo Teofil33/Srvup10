@@ -30,6 +30,7 @@ urlpatterns = [
     url(r'^about/$', views.about, name="about"),
     url(r'^contact/$', views.contact, name="contact"),
     url(r'^videos/', include("videos.urls", namespace="videos")),
+    url(r'^notifications/', include("notifications.urls", namespace="notifications")),
 ]
 
 if settings.DEBUG:
