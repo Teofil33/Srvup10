@@ -10,11 +10,12 @@
 		<tr>
 			<th>Notifications</th>
 			<th>Recipient</th>
+			<!-- <th>Target</th> -->
 			<th>Time</th>
 		</tr>
 		{% for notification in notifications %}
 			<tr>
-				<td>{{ notification.action }}</td>
+				<td>{{ notification.verb }}</td>
 				<td>{{ notification.recipient }}</td>
 				<td>{{ notification.timestamp }}</td>
 			</tr>

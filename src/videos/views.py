@@ -27,11 +27,22 @@ def video_detail(request, cat_slug, vid_slug):
 		instance.path = request.get_full_path()
 		instance.content = form.cleaned_data.get('content')
 		instance.save()
+		print(instance.video)
 		if parent_comment:
-			notify.send(request.user, recipient=parent_comment.user, action="Responded to user")
+			notify.send(
+				request.user,
+				action=instance,
+				target=parent_comment,
+				recipient=parent_comment.user,
+				verb="replied to")
 			messages.success(request, "Thank you for your Reply!")
 		else:
-			notify.send(request.user, recipient=request.user, action="New comment added")
+			notify.send(
+				request.user,
+				action=instance,
+				recipient=request.user,
+				target = instance.video,
+				verb="commented on")
 			messages.success(request, "Thank you for your Comment!")	
 		return redirect(video.get_absolute_url())
 

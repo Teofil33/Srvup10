@@ -25,7 +25,7 @@ def comment_thread(request, id, cat_slug, vid_slug):
 		instance.path = request.get_full_path()
 		instance.content = comment_form.cleaned_data.get("content")
 		instance.save()
-		notify.send(request.user, recipient=parent_comment.user, action="responded to user")
+		notify.send(request.user, action=instance, target=parent_comment, recipient=parent_comment.user, verb="replied to")
 		messages.success(request, "Thank you for your reply")
 		return redirect(comment.get_absolute_url())
 	context = {
