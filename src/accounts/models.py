@@ -127,8 +127,8 @@ class MyUser(AbstractBaseUser):
 
     # Customization    
 	def __unicode__(self):              # __unicode__ on Python 2
-		return self.email    
-
+		#return self.email    
+		return self.username
 	def has_perm(self, perm, obj=None):
 	    "Does the user have a specific permission?"
 	    # Simplest possible answer: Yes, always

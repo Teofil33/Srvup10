@@ -4,5 +4,7 @@ from .views import notifications_list
 
 
 urlpatterns = [
-	url(r'^$', notifications_list, name="notification_list")
+	url(r'^$', notifications_list, name="notification_list"),
+	# url(r'unread/^$', read, name="unread"),
+	# url(r'read/^$', undread, name="read")
 ]

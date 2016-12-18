@@ -5,9 +5,32 @@ from django.contrib.contenttypes.models import ContentType
 from django.db import models
 from django.conf import settings
 
+from .signals import notify
+
 # Create your models here.
 
-from .signals import notify
+class NotificationQuerySet(models.query.QuerySet):
+	def get_user(self, user):
+		return self.filter(recipient=user)
+
+	def unread(self):
+		return self.filter(unread=True)
+
+	def read(self):
+		return self.filter(read=True)		
+
+class NotificationManager(models.Manager):
+	def get_queryset(self):
+		return NotificationQuerySet(self.model, using=self._db)
+
+	def all_unread(self):
+		return self.get_queryset().get_user(user).unread()
+
+	def all_read(self):
+		return self.get_queryset().get_user(user).read()
+
+	def all_for_user(self):
+		return self.get_queryset().get_user(user)					
 
 class Notification(models.Model):
 	# Someone did something, AUTH_USER_MODEL
@@ -34,10 +57,39 @@ class Notification(models.Model):
 
 	recipient = models.ForeignKey(settings.AUTH_USER_MODEL, related_name="notifications")
 
+	read = models.BooleanField(default=False)
+	unread = models.BooleanField(default=True)
 	timestamp = models.DateTimeField(auto_now_add=True, auto_now=False)
 
+	objects = NotificationManager()
+
+	# def __unicode__(self):
+	# 	context = {
+	# 		"sender": self.sender_object,
+	# 		"verb": self.verb,
+	# 	}
+	# 	if self.target_content_object:
+	# 		if self.action_object:
+	# 			context = {
+	# 				"sender": self.sender_object,
+	# 				"verb": self.verb,
+	# 				"action": self.action_object,
+	# 				"target": self.target_content_object,
+	# 			}
+	# 	context = {
+	# 		"sender": self.sender_object,
+	# 		"verb": self.verb,
+	# 		"target": self.target_content_object,
+	# 	}		
+
+	# 	if self.target_content_object:
+	# 		if self.action_object:
+	# 			return "%(senders)s %(verb)s %(target)s with %(action)s" %context
+	# 		return "%(senders)s %(verb)s %(target)s" %context	
+	# 	return "%(sender)s %(verbs)s" %context
+
 	def __unicode__(self):
-		return str(self.verb)
+		return(self.verb)
 
 	class Meta:
 		ordering = ["-timestamp"]	 

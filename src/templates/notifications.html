@@ -3,24 +3,36 @@
 {% block title %} {{ block.super }} | Notifications {% endblock title %}
 
 {% block content %}
-	<div class="col-sm-8 col-sm-offset-2">
+	<div class="col-sm-10 col-sm-offset-1">
 	<h1 class="text-center">Notifications</h1>
 	<hr/>
 	<table class="table table-striped">
 		<tr>
-			<th>Notifications</th>
-			<th>Recipient</th>
+			<!-- <th class="text-center">Notifications</th> -->
 			<!-- <th>Target</th> -->
-			<th>Time</th>
+			<!-- <th>Time</th> -->
 		</tr>
 		{% for notification in notifications %}
 			<tr>
-				<td>{{ notification.verb }}</td>
-				<td>{{ notification.recipient }}</td>
-				<td>{{ notification.timestamp }}</td>
+				<td>{{ notification.sender_object }}
+					{{ notification.verb }}
+					{{ notification.action_object }}
+					with
+					{{ notification.target_content_object }}
+				</td>
+				<td>
+					{% if notification.read %} Read {% else %} Unread {% endif %}
+				</td>
+				<!-- <td>{{ notification.timestamp }}</td> -->
 			</tr>
+
 		{% endfor %}
 	</table>
 	</div>
 	
 {% endblock content %}
+
+			"sender": self.sender_object,
+			"verb": self.verb,
+			"action": self.action_object,
+			"target": self.target_content_object,
