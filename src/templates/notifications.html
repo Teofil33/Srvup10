@@ -14,11 +14,17 @@
 		</tr>
 		{% for notification in notifications %}
 			<tr>
-				<td>{{ notification.sender_object }}
+				<td>
+					{{ notification|safe }}
+<!-- 				{{ notification.sender_object }}
 					{{ notification.verb }}
+					{% if notification.action_object %}
 					{{ notification.action_object }}
+					{% endif %}
+					{% if notification.target_content_object %}
 					with
 					{{ notification.target_content_object }}
+					{% endif %} -->
 				</td>
 				<td>
 					{% if notification.read %} Read {% else %} Unread {% endif %}
