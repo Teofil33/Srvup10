@@ -32,7 +32,10 @@ class NotificationQuerySet(models.query.QuerySet):
 		return self.filter(read=False)
 
 	def read(self):
-		return self.filter(read=True)		
+		return self.filter(read=True)
+
+	def recent(self):
+		return self.unread()[:5];			
 
 class NotificationManager(models.Manager):
 	def get_queryset(self):
@@ -100,36 +103,27 @@ class Notification(models.Model):
 			if self.action_object and not target_url:
 				return "%(sender)s %(verb)s %(target)s with %(action)s" %context	
 			return "%(sender)s %(verb)s %(target)s" %context	
-
 		return "%(sender)s %(verb)s" %context
 
-	# def __unicode__(self):
-	# 	context = {
-	# 		"sender": self.sender_object,
-	# 		"verb": self.verb,
-	# 	}
-	# 	if self.target_content_object:
-	# 		if self.action_object:
-	# 			context = {
-	# 				"sender": self.sender_object,
-	# 				"verb": self.verb,
-	# 				"action": self.action_object,
-	# 				"target": self.target_content_object,
-	# 			}
-	# 	context = {
-	# 		"sender": self.sender_object,
-	# 		"verb": self.verb,
-	# 		"target": self.target_content_object,
-	# 	}		
+	@property	
+	def get_link(self):
+		try:
+			target_url = self.target_content_object.get_absolute_url()
+		except:
+			target_url = reverse("notifications:notification_list")
+		context = {
+			"sender": self.sender_object,
+			"verb": self.verb,
+			"action": self.action_object,
+			"target": self.target_content_object,
+			"verify_read": reverse("notifications:notification_read", kwargs={"id": self.id}),
+			"target_url": target_url,
+		}
+		if self.target_content_object:
+			return "<a href='%(verify_read)s?next=%(target_url)s'>%(sender)s %(verb)s %(target)s with %(action)s</a>" %context
+		else:
+			return "<a href='%(verify_read)s?next=%(target_url)s'>%(sender)s %(verb)s</a>" %context
 
-	# 	if self.target_content_object:
-	# 		if self.action_object:
-	# 			return "%(senders)s %(verb)s %(target)s with %(action)s" %context
-	# 		return "%(senders)s %(verb)s %(target)s" %context	
-	# 	return "%(sender)s %(verbs)s" %context
-
-	# def __unicode__(self):
-	# 	return(self.verb)
 
 	class Meta:
 		ordering = ["-timestamp"]	 

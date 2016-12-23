@@ -38,5 +38,43 @@
 			{% endblock %}
 		})
 	</script>
+	<script type="text/javascript">
+		$(document).ready(function(){
+			$(".notification-toggle").click(function(e){
+				e.preventDefault();
+				$.ajax({
+					type: "POST",
+					url: "{% url 'notifications:get_notifications_ajax' %}",
+					data: {
+						csrfmiddlewaretoken: "{{ csrf_token }}",
+					},
+	              success: function(data){
+	                  $('#notification-dropdown').html('<li role="presentation" class="dropdown-header"><h5>Notifications</h5></li>');
+	                  var count = data.count
+	                  console.log(count)
+					  var url = '{% url "notifications:notification_list" %}'
+					  $('#notification-dropdown').append("<li><a href='" + url + "'>View All Notifications</a></li>");
+	                  if (count == 0) {
+	                    var url = '{% url "notifications:notification_list" %}'
+	                    // $('#notification-dropdown').append("<li><a href='" + url + "'>View All Notifications</a></li>");
+	                  } else {
+	                    $(data.notifications).each(function(){
+	                      var link = this;
+	                      $('#notification-dropdown').append("<li>" + link + "</li>");
+
+	                    })
+	                  }  
+	                  // $('#notification-dropdown').append("<hr/>")
+
+	                  console.log(data.notifications);
+	              },
+					error: function(rs, e) {
+						console.log(rs);
+						console.log(e);
+					}
+				})
+			})
+		})
+	</script>
 </body>
 </html>
